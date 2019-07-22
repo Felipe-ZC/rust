@@ -1,0 +1,55 @@
+--- References and borrowing --- 
+
+- The issue with the tuple code in the previous section if that we have to return the String to the calling function so that we can still use the string after the call to calculate_length because String was moved. 
+
+- In Rust we can define our functions to use references to an object instead of passing owernship of the value:
+
+fn main() {
+    let s1 = String::from("hello");
+
+    let len = calculate_length(&s1);
+
+    println!("The length of '{}' is {}.", s1, len);
+}
+
+fn calculate_length(s: &String) -> usize {
+    s.len()
+}
+
+- The ampersands (&) are known as references, and they allow the programmer to refer to a value without taking owernship of it. In the case of a String object, a reference is a pointer to the variable that points to a String: 
+
+s (ptr) ----> s1 (ptr, length, capacity) ----> "hello"
+
+- References can refer to a value, but do NOT OWN IT! Because of this, the value a reference points to will not be dropped when the reference goes out of scope. This way when we pass a reference into a function, we don't have to return the values to give back ownership because we never had it in the first place. 
+
+- In Rust, having references as function parameters is known as "borrowing". 
+
+- If we try to modify a value we're borrowing, the compiler will complain that we're not allowed to mutate a reference. 
+
+*** NOTE: Just as variables are immutable by default SO ARE REFERENCES! 
+
+--- Mutable references ---
+
+- Just like variables, references can also be mutable: 
+
+fn main() {
+    let mut s = String::from("hello");
+
+    change(&mut s);
+}
+
+fn change(some_string: &mut String) {
+    some_string.push_str(", world");
+} 
+
+*** NOTE: You can only have one mutalbe reference to a particular piece of data in a particular scope:
+
+let mut s = String::from("hello");
+
+let r1 = &mut s;
+let r2 = &mut s;
+
+println!("{}, {}", r1, r2);
+
+- ^ The code above will fail, the compiler will complain that you cannot borrow 's' as a mutable reference  more than once. 
+
