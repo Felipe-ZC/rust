@@ -1,0 +1,29 @@
+--- Ownership Rules ---
+
+1) Each value in Rust has a variable thats called its OWNER.
+2) There can only be one owner at a time.
+3) When the owner goes out of scope, the value will be dropped. 
+
+--- Variable Scope --- 
+
+Ex: let s = "hello";
+
+- The variable 's' refers to a string literal, the value of the string is hardcoded into the program.
+
+- String literals are convenient, but aren't suitable for every text-based situation. String literals are immutable and we might not know what the value is when writing our program (taking input from user). 
+
+- Rust features a type known as 'String' which is allocated on the heap and as such is able to store a large amount of text that is unknown at compile time. 
+
+- Ex: let s = String::from("hello");
+
+- The double colon ('::') is an operator that allows use to namespace this particular 'from' function under the String type rather than using some sort of name. This kind of String can be mutated:
+
+- Ex 
+let mut s = String::from("hello");
+s.push_str("world"); // Appends a string literal to a String
+
+--- Memory and Allocation ---
+
+- So why can String types be mutated but not string literals? The is due to the way the two types handle memory. 
+
+    

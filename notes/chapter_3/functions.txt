@@ -1,0 +1,52 @@
+--- Functions --- 
+
+- Sytanx: fn func_name(arg_name: type) { body; } 
+
+* Note: Rust uses snake case (lowercase & underscores) for function & variable names. 
+
+- Example: fn another_function(x: i32) { println!("Argument is {}", x); }
+
+- You MUST declare the type of each parameter in a Rust function, multiple arguments 
+are separated by commas.
+
+--- Statements vs Expressions ---
+
+- Rust is an expression-based language. 
+
+- Statements are instructions that perform some action AND DO NOT RETURN A VALUE!
+
+- Expressions are instructions that evaluate to a resulting value. 
+
+- Example: let y = 6; (statement)
+
+- Statements do not return values, therefore, you can't assign a let statement to another variable. Because of this, there isn't a value for y to bind to unlike other languages such as C & Ruby where an assignment returns a value. This is NOT the case in Rust. Function definition are also statements.
+
+- Expression evaluate to some value, and they make up most of the code you'll write in Rust. Expressions can be simple math expressions such as 5 + 6, which evaluates to 11. Expressions can be part of statements, such as the 6 in let y = 6. Function and macros calls are also expresions, and the block that we use to create new scopes ({}) is also an expression. 
+
+- Ex:
+
+fn main() {
+    let x = 5;
+
+    let y = {
+        let x = 3;
+        x + 1
+    };
+
+    println!("The value of y is: {}", y);
+}
+
+- Notice the let y block, in this case { let x = 3; x + 1 } is an expression that evaluates to 4.
+The value is bound to y as part of the let statement, NOTE the x + 1 line without a semicolon at the end.
+
+*** NOTE: Expressions DO NOT include ending semicolons, if you add a semicolon to the end of an expression, you turn it into a statement, which will not return a value! 
+
+--- Functions with return values --- 
+
+- Functions can return values to the code that calls them. 
+
+Syntax: fn fn_name(arg_name: type) -> type { expression } 
+
+- In Rust, we don't declare the name of the return value but we do declare the type using the arrow
+operator (->). You can also return early using the 'return' keyword and specifying a value. 
+

@@ -1,0 +1,70 @@
+-------- Variables and mutability --------
+
+- In Rust, variables are immutable by default, however, you still have the option
+of making your variable mutable. 
+
+- An immutable variable's value cannot be changed once it is bound to a name.
+
+- Variables can be made mutable by adding the 'mut' keyword in front of their names. 
+
+- There are multiple trade-offs to consider regarding mutability:
+    a) When using large data structures, mutating an instance of the strucutre might be 
+      faster than copying and returning a newly allocated instance. 
+    b) With smaller data structures, copying and returning a newly allocated instance may
+      be easier to think through, thus sacrificing perfromance for clarity.
+
+-------- Variables vs contants --------
+
+- Like variables, constants refer to values that once assigned a name cannot be changed. 
+
+- You cannot use the 'mut' keyword when declaring a constant. 
+
+- Constants must be declared using the 'const' keyword, instead of 'let', also the type 
+of a constant MUST be annotated. 
+
+- Constants can be declared in any scope.
+
+- Constants may be set only to a constant expression, not the result of any function call 
+or any other value that can only be computed at runtime.  
+
+- For constants, use only capital letters with snakecase: const MAX_POINTS: u32 = 100_000;
+
+-------- Shadowing --------
+
+- In Rust, you can declare a new variable with the name of a previously one, and the new
+variable 'shadows' the previous variable. 
+
+- This means that whatever value was assigned to the 'new' variable is now thew value of
+the variable: 
+
+fn main() {
+    let x = 5;
+
+    let x = x + 1;
+
+    let x = x * 2;
+
+    println!("The value of x is: {}", x);
+}
+
+- Shadowing is different than mutating a variable. Notice how the 'let' keyword is still needed
+when shadowing, and we did not use the 'mut' keyword.
+ 
+- NOTE: By using the 'let' keyword, we can apply some transformations to the value of the var,
+  but that var will remain immutable after those transformations have been completed.
+
+- NOTE: When usng the 'let' keyword, we are essentially creating a new variable, we can change 
+the type of the value and reuse the name:
+
+let spaces = "   "; // String 
+let spaces = spaces.len(); // Number
+
+- The code above is allowed by the compiler due to shadowing, reusing the variable name but changing
+the type. 
+
+- NOTE: If we were to use the 'mut' keyword in the code above we would get a compiler error saying
+we're not allowed to mutate a vars. type: 
+
+let mut spaces = "   ";
+spaces = spaces.len();
+

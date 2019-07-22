@@ -1,0 +1,28 @@
+--- Ownership --- 
+
+- Rust's central feature is ownership. 
+
+- All programs have to manage the way they use memory at run time. Some languages feature garbage
+collection that frequently looks for no longer used memory as the program runs (Java). In other languages its up to the programmer to explicitly allocate and free the memory used by a program (C).
+
+- In Rust, memory is managed through a system of ownership with a set of rules that the compiler checks at compile time. None of the ownership featrues slow down your program while its running. 
+
+--- Stack & heap ---
+
+- Both stack and heap are parts of memory that are available to your program to use at runtime, but they are structured in different ways. 
+
+- Stack's store values in LIFO order (last in, first out) and all data stored on the stack must have a known, fixed size. 
+
+- Data with an unknown size at compile time or a size that might change must be stored on the heap instead.
+
+- The heap is less organized, when you put data on the heap, you must request a certain amount of space. The OS then finds an empty spot in the heap that is big enough, marks it as being in use, and returns a pointer to that location in memory. 
+
+- Because pointers have a known, fixed size, you can store pointers on the stack!
+
+- Pushing to the stack is faster than allocation on heap, because the OS never has to search for a place to store new data, that location is always on top of the stack.
+
+- Accessing data on the heap is slower than accessing data on the stack because you have to follow a pointer to get there. 
+
+- When your code calls a function, the values passed into the function (including pointers to data on the heap) and the functions local variables get pushed onto the stack. When the function returns, those values get popped off the stack. 
+
+*** NOTE: Keeping track of what parts of code are using what data on the heap, minimizing the amount of duplicate data on the heap, and cleaning up unused data on the heap so you don't run out of space are all problems that ownership addresses. Managing heap data is why ownership exists! 

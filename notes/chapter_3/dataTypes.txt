@@ -1,0 +1,97 @@
+------- Data types -------
+
+- Every value in Rust has a specific data type, these types tell Rust what kind of data a 
+value is. 
+
+- Rust is statically typed. this means that all the variables must be assinged a type at 
+compile time. 
+
+- The Rust compiler can also infer the type of a variable depending on how its used. 
+
+- There are some cases where many types are possible, such as convering a String to a numeric 
+type. In these cases we must use a type annotation. 
+
+------- Scalar types -------
+
+- A scalar value represents a single value, there are four primary scalar types:
+
+1) Integers
+
+    - A whole number, a number without a fractional component. Integers in Rust can be 
+      signed or unsigned and have a specific size (32, 64, 128). Rust also features two
+      sizes that are dependent on your computer's architecture (isize, usize). 
+
+    - Integer literals can be written in decimal, hex, octal, binary and byte format. The
+      '_' character acts a s avisual separator when writing integer literals: 98_222.
+      
+2) Floating-point numbers
+
+    - Rust features two primitive floating point types: f32 & f64.
+    - f32 is a single point precision float and f64 has double precision. 
+
+3) Booleans
+
+    - Only two possible values, true or flase. 
+    - One byte in size. 
+    - Specified using the 'bool' keyword. 
+
+4) Characters
+    
+    - Four bytes in size and represents a Unicode Scalar Value. 
+    - Because Rust's chars are in Unicode, they can represent a lot more than just ASCII.
+ 
+------- Compound types -------
+
+- Rust's compound types can group multiple values into one type. 
+- There are two compound types:
+
+1) Tuples
+    
+    - Fixed length, comma-separated list of values: 
+        let tup: (i32, f64, u8) = (500, 6.4, 1);
+
+    - A tuple is considered a single compound element, to get the individual values we can 
+      use pattern matching to destructure a tuple:
+
+        fn main() {
+            let tup = (500, 6.4, 1);
+            let (x, y, z) = tup;
+            println!("The value of y is: {}", y);
+        }
+
+    - We can also retrieve the individual values in a tuple using the dot operator (.):
+        
+        fn main() {
+            let x: (i32, f64, u8) = (500, 6.4, 1);
+            let five_hundred = x.0;
+            let six_point_four = x.1;
+            let one = x.2;
+        }
+ 
+2) Arrays
+
+    - Unlike tuples, values placed in an array must all have the SAME TYPE.
+    - Arrays have a fixed length in Rust:
+
+        fn main() {
+            let a = [1, 2, 3, 4, 5];
+        }
+    
+    - Memory for arrays is allocated on the stack rather than the heap. 
+    - Arrays are also useful when you want to make sure that you always 
+      have a fixed number of elements. 
+    - Arrays can also be written with a type annotation and length:       
+       
+         let a: [i32; 5] = [1, 2, 3, 4, 5];
+
+    - If you want to create an array that contains the same value for each 
+      elment, you can specify the initial value, a semicolon and the length: 
+     
+        let a = [3; 5]; <---> let a = [3, 3, 3, 3, 3];
+
+    - An array is a single chunk of memory allocated on the stack, the elements
+      of an array can be accessed using indexing:
+       
+         a[0], a[1], a[2]...
+
+    - NOTE: The Rust compiler performs out of bounds checks for arrays!!!!

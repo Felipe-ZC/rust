@@ -1,0 +1,24 @@
+----- Cargo -----
+
+- Rust's build system and package manager (similar to NPM).
+
+- Can be used to created new projects using 'new' command.
+
+- Version and dependency information can be found in the .toml file created
+by 'cargo new' (similar to package.json).
+
+- Cargo projects can be compiled using 'cargo build' which creates an executable in 
+the target directory.
+
+- A cargo project can be built and run using 'cargo run'. 
+
+- To check our Rust code, we can use the command 'cargo check'. This command checks your code
+to make sure it compiles. Often times, 'check' is faster than 'build'.
+
+- When a cargo project is ready for release, we can use the 'cargo build --release' command
+to compile the project with optimizations. These optimizations make your Rust code run faster,
+however, it takes a longer time to compile.
+
+
+
+ 

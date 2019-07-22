@@ -1,0 +1,42 @@
+--- Control Flow ---  
+
+- If expression syntax: if condition { body; } else { body; } 
+
+- Because if is an expression, we can use it on the right side of a 'let' statement. 
+
+- Ex: let number = if condition { 5 } else { 6 };
+
+*** NOTE: Because 'if' is an expression it has the potential to return a value from each arm of the expression. The values on each potential arm of the if expression must be of the same type when using it in conjunction with the let statement. 
+
+--- Loops --- 
+
+- Rust has three kinds of loops:
+
+1) loop: This loop will run forever until you explicitly tell it stop. We can use the keyboard interrupt (CTRL + C) or the break keyword to tell the loop to stop executing. 
+
+The break keyword can also be used to return a value from a loop. 
+
+Syntax: 
+loop {
+    break 11 + 6;
+}
+
+2) while: This loop will run until the underlying condition used to start the loop evaluates to false.
+
+Syntax: 
+while number != 0 {
+    number -= 1;
+}
+
+3) for: This loop will run through the elements in a collection such as an array. Traditionally (in other languages) it is used to loop a finite set of times. 
+
+Syntax:
+for element in a.iter() {
+    //doSomething
+}
+
+for number in (1..4) {
+    //doSomething 4 times
+}
+
+
