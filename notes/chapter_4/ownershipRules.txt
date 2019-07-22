@@ -22,8 +22,58 @@ Ex: let s = "hello";
 let mut s = String::from("hello");
 s.push_str("world"); // Appends a string literal to a String
 
+- When a String goes out of scope, Rust calls a special function to free the memory occupied by the String. This function is called drop, which is called automatically when the var goes out of scope. 
+
 --- Memory and Allocation ---
 
 - So why can String types be mutated but not string literals? The is due to the way the two types handle memory. 
 
-    
+let s1 = String::from("hello");
+let s2 = s1;
+
+- A String object is made up of three different parts:
+
+1) Pointer to the location in memory that holds the contents of the string
+2) Length: Quantitiy of memory, in bytes, the contents of the String is currently using.
+3) Capacity: The total amount of memory, in bytes, that the String has received from the OS.
+
+- ^ This group of data is sotred on the stack, the contents of string is stored on the heap. 
+
+- When we asign s1 to s2, only the stack data is copied, meaning the pointer, length and capacity are copied but not the contents of string.    
+
+- Earlier we said that when a variable goes out of scope, Rust automatically calls the drop function and cleans up the heap memory for that variable. There is a problem if both variables are pointing to the same memory location, when they go out of scope they will try to free the same memory. Freeing memory twice can lead to memory corruption!
+
+- To ensure memory safety, Rust performs a 'move'. Instead of trying to copy the allocated memory, Rust no longer considers s1 to be valid and therefore Rust doesnt need to free anything when s1 goes out of scope.
+
+--- Clone ---
+
+- If we do want to perform a deep copy of the heap data of a String, not just the stack data, we can use the clone method:
+
+let s1 = String::from("hello");
+let s2 = s1.clone();
+
+--- Stack only data --- 
+
+let x = 5;
+let y = x;
+
+- If we were to print the values of the variables defined above, you would notice that x is still valid and wasn't moved to y. Which means data was copied without a call to clone or a move. 
+
+- The reason is that types whose size is known at compile, like integers, are stored entirely on the stack. Copying these values is quick an inexpensive, that means theres no reason we would want to prevent x from being valid. 
+
+- Rust uses a special annotation called the Copy trait that we can place on types like integers that are stored on the stack.
+
+- If a type has the Copy trait, then an older variable is still usable after assingment.
+
+- Types that implement the Drop trait cannot be annotated with the Copy trait.
+
+- Copy types:
+
+1) All integer types
+2) Boolean type
+3) Floating point types
+4) Character type
+5) Tuples if they contain types that are also Copy. 
+
+
+ 
