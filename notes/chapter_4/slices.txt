@@ -43,8 +43,44 @@ fn main() {
     // we could meaningfully use the value 5 with. word is now totally invalid!
 }
 
-- ^ The code above compiles without any errors and would also do so if we used the word variable after calling s.clear(). Because word isnt connected to the state of s at all, word still contains the value 5 after clearning the String.
+- ^ The code above compiles without any errors and would also do so if we used the word variable after calling s.clear(). Because word isnt connected to the state of s at all, word still contains the value 5 after cleaning the String.
 
-- Having to worry about synchronizing data in s with word is tedious and error prone!
+- Having to worry about synchronizing data in s with word is tedious and error prone, luckily for us, Rust implements a solution to this problem known as String Slices.
+
+--- String Slices --- 
+
+- A string slice is a reference to part of a String:
+
+let s = String::from("hello world");
+
+let hello = &s[0..5];
+let world = &s[6..11];
+
+- The syntax is similar to that of a reference but inculues a starting and ending index. Like most other programming languages, [start, end), starting position is inclusive, ending position is exclusive. 
+
+- Internally, the slice data structure stores a pointer to the starting position and the length of the slice (end - start).
+
+s           world
+|           |    
+v           V
+0 1 2 3 4 5 6 7 8 9 10 
+h e l l o   w o r l d 
+
+- Using Rust's range syntax, if you want to start at the first index you can drop he value before the first two periods:
+
+let slice = &s[0..2] <---> let slice = &s[..2]
+
+- We can also drop the trailing number to slice until the end of the string: 
+
+let len = s.len();
+let slice = &s[3..len] <---> let slice = &s[3..]
+
+- We can also drop both arguments and take a slice of the entire String: 
+
+let len = s.len();
+let slice = &s[0..len] <---> let slice = &s[..]
+
+*** NOTE: String slice ranges must occur at 
+
 
   
