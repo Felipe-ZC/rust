@@ -1,0 +1,50 @@
+--- The slice type ---- 
+
+- Slices DO NOT HAVE OWNERSHIP!
+
+- Slices let you reference a contiguous sequence of elements in a collection, rather than the whole collection. 
+
+- Problem: write a function that takes a string and returns the first word it finds in that string. If the function doesn’t find a space in the string, the whole string must be one word, so the entire string should be returned.
+
+- The first solution to this problem involves returning the index of the end of the word: 
+
+fn first_word(s: &String) -> usize {
+    let bytes = s.as_bytes(); // Conert String to an array of bytes
+
+    for (i, &item) in bytes.iter().enumerate() { // Iterate over array of bytes
+        if item == b' ' { // Look for a whitespace char
+            return i;
+        }
+    }
+
+    s.len()
+}
+
+- Iter is a method that returns each element in a collection.
+
+- Enumerate wraps the results of iter and returns each element as part of a tuple instead:
+    1) First elment in tuple is the index of the element in a collection.
+    2) Second elment in tuple is a reference to the element in a collection.
+
+- Because the enumerate method returns a tuple, we can use patterns to deconstruct the tuple. In the for loop we specify a pattern that has i for the index and &item for the single byte in the tuple. 
+
+- Inside of the for loop, we search for a whitespace character using the byte literal syntax, that is,"b ' '" . If we find a whitespace, we return the position of this character otherwise we return the whole length of the string. 
+
+- There is a problem with the code, because we're returning a usize on its own however its only meaningful in the context of the &String. In other words, because its a seperate value from the String, theres no gaurantee that it will still be valid in the future: 
+
+fn main() {
+    let mut s = String::from("hello world");
+
+    let word = first_word(&s); // word will get the value 5
+
+    s.clear(); // this empties the String, making it equal to ""
+
+    // word still has the value 5 here, but there's no more string that
+    // we could meaningfully use the value 5 with. word is now totally invalid!
+}
+
+- ^ The code above compiles without any errors and would also do so if we used the word variable after calling s.clear(). Because word isnt connected to the state of s at all, word still contains the value 5 after clearning the String.
+
+- Having to worry about synchronizing data in s with word is tedious and error prone!
+
+  
