@@ -47,7 +47,7 @@ fn main() {
 
 - Having to worry about synchronizing data in s with word is tedious and error prone, luckily for us, Rust implements a solution to this problem known as String Slices.
 
---- String Slices --- 
+--- String Slices --- 
 
 - A string slice is a reference to part of a String:
 
@@ -72,15 +72,72 @@ let slice = &s[0..2] <---> let slice = &s[..2]
 
 - We can also drop the trailing number to slice until the end of the string: 
 
-let len = s.len();
-let slice = &s[3..len] <---> let slice = &s[3..]
+let len = s.len();
+let slice = &s[3..len] <---> let slice = &s[3..]
 
 - We can also drop both arguments and take a slice of the entire String: 
-
+
 let len = s.len();
-let slice = &s[0..len] <---> let slice = &s[..]
+let slice = &s[0..len] <---> let slice = &s[..]
 
-*** NOTE: String slice ranges must occur at 
+*** NOTE: String slice ranges must occur at valid UTF-8 character boundaries. We are assuming ASCII only charcters in this section. 
+
+
+- We can rewrite the first_word function to return a slice:
+
+fn first_word(s: &String) -> &str {
+    let bytes = s.as_bytes();
+
+    for (i, &item) in bytes.iter().enumerate() {
+        if item == b' ' {
+            return &s[0..i];
+        }
+    }
+
+    &s[..]
+}
+
+- The type annotation for a string slice is &str. Not much has changed, we're still reading the string as an array of bytes and getting the index from the enumerate() method. This time around, when we find the first whitepsace char, we return a string slice instead of just the index.
+
+- The important part here is that the value returned is tied to the underlying data.
+
+- A string slice is a reference to part of the string we want to 'slice' from and the number of elements in that slice. If the underlying data changes, the slice itself will also change accordingly. 
+
+- What would happen if we try to use a string slice whose underlying String has been cleared? Lets take a look:
+
+fn main() {
+    let mut s = String::from("hello world");
+
+    let word = first_word(&s); // immutable reference
+
+    s.clear(); // error! mutable reference must be used here to clear s.
+
+    println!("the first word is: {}", word);
+}
+
+- The code above will not compile because of Rust's borrowing rules (ownership). If we have an immutable reference to a value, we cannot also refer to the same value using a mutable reference.
+
+- Clear needs to mutable reference to a String to truncate it!
+
+--- String literals are slices ---
+
+- Recall that string literals are statically allocated, which means they're saved inside our compiled program and exists for the entire duration that it runs. A string literal is a slice that points to a specific point in the compiled program. The type of a string literal is '&s' and is the reason they are immutable since '&s' is an immutable reference.
+
+--- String slices as parameters --- 
+
+- String slices can be passed a parameters to functions that accept Strings, this is useful because a function with the signature 
+
+	fn first_word(s: &str) 
+
+will accept both &String and &str values. 
+
+--- Other slices --- 
+
+- String slices are specific to strings, but there a more general type of slice we can use:
 
 
-  
+let a = [1, 2, 3, 4, 5];
+
+let slice = &a[1..3];
+
+
