@@ -24,4 +24,30 @@
 Can rect1 hold rect2? true
 Can rect1 hold rect3? false
 
-- Rect1 can hold rect2 because it is larger but cannot hold rect3 because its smaller. 
+- Rect1 can hold rect2 because it is larger but cannot hold rect3 because its smaller.
+
+- See projects folder for code.
+
+--- Associated functions --- 
+
+- Inside the impl block of a struct, we're also allowed to define functions that don't take selft as a parameter! 
+
+- This is still a function and not a method because they don't have an instance of the struct to work with. 
+
+- Ex: String::from is an associated function of String.
+
+- Associated functions are often used as constructors that will return news instances of the struct, for example: 
+
+impl Rectangle {
+    fn square(size: u32) -> Rectangle {
+        Rectangle { width: size, height: size }
+    }
+}
+
+- To call this kind of function we use the '::' syntax with the struct name:
+
+let sq = Rectangle::square(3);
+
+- Each struct is allowed to have multiple impl blocks.
+
+ 
