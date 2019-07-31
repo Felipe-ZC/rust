@@ -1,0 +1,27 @@
+--- Methods ---
+
+- Methods are similar to functions, however, methods are defined within the context of a struct, and their first parameter is always 'self' which represents the instance of the struct the method is being called on.
+
+- We can change the rectangle program so that the area functin is actually a method of the Rectanlge struct. 
+
+*** NOTE: Methods can take ownership of self, borrow self immutably as we’ve done here, or borrow self mutably, just as they can any other parameter! We still need to use the & before self, just as we did in &Rectangle.
+
+--- Methods with more parameters --- 
+
+- Lets add a new method to the rectangle struct, this method should take in another Rectangle instance and return a boolean value that specifies if the second rectangle can fit completely within self. That is, given two rectangle instances (self, rect2) write a method that returns true if rect2 can fit competely inside of self and false otherwise:
+
+fn main() {
+    let rect1 = Rectangle { width: 30, height: 50 };
+    let rect2 = Rectangle { width: 10, height: 40 };
+    let rect3 = Rectangle { width: 60, height: 45 };
+
+    println!("Can rect1 hold rect2? {}", rect1.can_hold(&rect2));
+    println!("Can rect1 hold rect3? {}", rect1.can_hold(&rect3));
+}
+
+- Output for the code above: 
+
+Can rect1 hold rect2? true
+Can rect1 hold rect3? false
+
+- Rect1 can hold rect2 because it is larger but cannot hold rect3 because its smaller. 

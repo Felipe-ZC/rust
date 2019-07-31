@@ -67,4 +67,21 @@ let user2 = User {
     ..user1
 };
 
+--- Tuple Struct ---
+
+- Structs can also be defined in a way that looks similar to tuples. Tuple structs have the added meaning the struct name provides, but dont; have names associated with their fields, rathr they just specify the types of the fields. 
+
+- Tuple structs are useful when you want to give the whole tuple a name and make it a different type from other tuples:
+
+struct Color(i32, i32, i32);
+struct Point(i32, i32, i32);
+
+let black = Color(0, 0, 0);
+let origin = Point(0, 0, 0);
+
+- Black and origin are different types! This is because they are instances of different tuple structs.
+
+--- Unit like struct --- 
+
+- We can also define a struct that does not have any fields! These are useful when implementing traits on types. 
 
