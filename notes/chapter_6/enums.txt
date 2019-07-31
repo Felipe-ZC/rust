@@ -1,0 +1,72 @@
+--- Enums --- 
+
+- Enums, short for enumerations, allow the programmer to define a type by enumerating its possible values. 
+
+- We should use an enum if we can enumerate all possible values for a variable. Consider the case of IP addresses, any IP address can be version four or version six. 
+
+- We can express this concept in code by defining an enum:
+
+enum IpAddrKind {
+    V4,
+    V6,
+}
+
+--- Enum Values ---
+
+- We can create two variants of the IpAddrKind enum:
+
+let four = IpAddrKind::V4;
+let six = IpAddrKind::V6;
+
+- Both four and six are of the same type, they are namespace with the "::" operator and we can define a function that takes in any variant of IpAddrKind:
+
+fn route(ip_kind: IpAddrKind) { }
+route(IpAddrKind::V4);
+route(IpAddrKind::V6);
+
+- Notice that we are not storing the IP address data, we only what kind it is. To store the data we might use a struct: 
+
+enum IpAddrKind {
+    V4,
+    V6,
+}
+
+struct IpAddr {
+    kind: IpAddrKind,
+    address: String,
+}
+
+let home = IpAddr {
+    kind: IpAddrKind::V4,
+    address: String::from("127.0.0.1"),
+};
+
+let loopback = IpAddr {
+    kind: IpAddrKind::V6,
+    address: String::from("::1"),
+};
+
+- Although the above code is correct, we can represent the same concept in a more concise way using just an enum, rather than an enum inside of a struct, by putting data directly into each enum variant:
+
+enum IpAddr {
+    V4(String),
+    V6(String),
+}
+
+let home = IpAddr::V4(String::from("127.0.0.1"));
+
+let loopback = IpAddr::V6(String::from("::1")); 
+
+- Each enum variant can have different types and amounts of associated data. Version four type ip addresses will have four values between 0 and 255. If we wanted to express this concept in code we could write: 
+
+enum IpAddr {
+    V4(u8, u8, u8, u8),
+    V6(String),
+}
+
+let home = IpAddr::V4(127, 0, 0, 1);
+
+let loopback = IpAddr::V6(String::from("::1"));
+
+
+
