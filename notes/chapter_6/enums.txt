@@ -68,5 +68,78 @@ let home = IpAddr::V4(127, 0, 0, 1);
 
 let loopback = IpAddr::V6(String::from("::1"));
 
+- We can put any kind of data we want in enums, strings, numeric types, structs and other enums as well!
 
+*** Note: Rust's standard library includes a definition for IpAddr as an enum with the variants discussed here.
 
+- Lets take a look at the following enum: 
+
+enum Message {
+    Quit,
+    Move { x: i32, y: i32 },
+    Write(String),
+    ChangeColor(i32, i32, i32),
+}
+
+- Defining an enum like the one above is similar to defining different kinds of struct definitions, except for the syntax and all the variants are grouped under the Message type. 
+
+- Message enum using structs: 
+
+struct QuitMessage; // unit struct
+struct MoveMessage {
+    x: i32,
+    y: i32,
+}
+struct WriteMessage(String); // tuple struct
+struct ChangeColorMessage(i32, i32, i32); // tuple struct
+
+- Notice that all these strcuts have their own type, which means we could not easily define a function to take any of kind of message as we could with the Message enum. 
+
+- We can define methods on enums just like we can on structs: 
+
+impl Message {
+    fn call(&self) {
+        // method body would be defined here
+    }
+}
+
+let m = Message::Write(String::from("hello"));
+m.call();
+
+--- The Option Enum ---
+
+- The Option type is a standard library defined enum that is used to express a scenario in which a value could be something or it could be nothing. RUST DOES NOT HAVE NULL!
+
+- While Rust does not have nulls, it uses the Option type to express the idea that a value might not be valid or is absent at the current time:
+
+enum Option<T> {
+    Some(T),
+    None,
+}
+
+- The Option enum is included in the prelude and so are its variants Some and None, you don't need to explicitly bring them into scope. Some and None can be used without the Option:: prefix. 
+
+- The T syntax is known as a generic type parameter, and for now it means the Some variant of the Option enum can hold one piece of data of any type. 
+
+let some_number = Some(5);
+let some_string = Some("a string");
+
+let absent_number: Option<i32> = None;
+
+- If we use None we have to tell the compiler what type of Option<T> we have, because the compiler can't infer the type of the Some variant by looking only at None. 
+
+- So why is Option<T> better than having null? 
+
+- Basically, Option<T> and T are different types, the compiler wont let us use an Option<T> value as if it was a valid value: 
+
+let x: i8 = 5;
+let y: Option<i8> = Some(5);
+let sum = x + y;
+
+- This code will not compile, because Rust does not understand how to add an i8 and an Option<i8>, because they're different types! 
+
+- In other words, you have to convert an Option<T> to a T before you can perform whatever operations are defined for T. This helps catch one of the most common issues with null: assuming that something isn't null when it actually is. 
+
+*** Note: Every value that has a type that ISN'T Option<T> is NOT NULL!
+
+- In general we want to run code that handle BOTH Some and None variants for the Option<T> type.
