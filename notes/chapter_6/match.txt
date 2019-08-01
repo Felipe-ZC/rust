@@ -1,0 +1,117 @@
+--- The match operator ---
+
+- Rust's match feature is a powerful control flow operator tha allows the
+programmer to compare a vlue against a serires of patterns and execute based on
+which pattern matches.
+
+- Consider the following example: 
+
+enum Coin {
+    Penny,
+    Nickel,
+    Dime,
+    Quarter,
+}
+
+fn value_in_cents(coin: Coin) -> u8 {
+    match coin {
+        Coin::Penny => 1,
+        Coin::Nickel => 5,
+        Coin::Dime => 10,
+        Coin::Quarter => 25,
+    }
+}
+
+- The code associated with each arm is an expresion, and the resulting value
+of the expression in the matching arm is the value that gets returned for the
+entire match. 
+
+- Curly brackets typically aren't used if the match arm code is short, if you
+  want to run multiple lines of code in match arm you can use curly brackets.
+
+--- Patterns that bind to values ---
+
+- Match arms can bind to parts of the value that match the pattern, consider the following example: 
+
+#[derive(Debug)] // so we can inspect the state in a minute
+enum UsState {
+    Alabama,
+    Alaska,
+    // --snip--
+}
+
+enum Coin {
+    Penny,
+    Nickel,
+    Dime,
+    Quarter(UsState),
+}
+
+- From 1999 through 2008, the United States minted quarters with different
+designs for each of the 50 states on one side. No other coins got state
+designs, so only quarters have this extra value. We can add this information to
+our enum by changing the Quarter variant to include a UsState value stored
+inside it.
+
+- Lets write a function that sorts the coins by value and if its a quarter it
+will print out the state associated with that quarter:
+
+fn value_in_cents(coin: Coin) -> u8 {
+    match coin {
+        Coin::Penny => 1,
+        Coin::Nickel => 5,
+        Coin::Dime => 10,
+        Coin::Quarter(state) => {
+            println!("State quarter from {:?}!", state);
+            25
+        },
+    }
+}
+
+- In the match expression for this function, we added a variable called state to the pattern that matches the variant Coin::Quarter. When a Coin::Quarter is matched the state variable will bind to the value inside the variant, this way we can extract values from enums. 
+
+--- Matching with Option<T> --- 
+
+- We can extract values from the Some variant of Option<T> the same way we did with enums!
+
+- Consider the following example: 
+
+fn plus_one(x: Option<i32>) -> Option<i32> {
+    match x {
+        None => None,
+        Some(i) => Some(i + 1),
+    }
+}
+
+let five = Some(5);
+let six = plus_one(five);
+let none = plus_one(None);
+
+- This code checks if there is a value inside an Option<i32>, if true it increases the value of the integer stored inside the Some variant. The match expression is a concise way of breaking down an Option type.
+
+--- Matches are exhuastive ---
+
+- Consider this code that won't compile: 
+
+fn plus_one(x: Option<i32>) -> Option<i32> {
+    match x {
+        Some(i) => Some(i + 1),
+    }
+}
+
+- Notice how we did not handle the None case, this code will cause a bug because Rust knows that we did not cover every possible case, and even knows which pattern we forgot! To use a match expression we must know all the possible patterns that the expression can match to.
+
+--- The '_' placeholder --- 
+
+- Even though match expressions are exhuastive, Rust provides a pattern we can use when we don't want to list all possible values. For example, a u8 can have valid values of 0 through 255, we don't have to list all 255 values using the '_' placeholder: 
+
+let some_u8_value = 0u8;
+match some_u8_value {
+    1 => println!("one"),
+    3 => println!("three"),
+    5 => println!("five"),
+    7 => println!("seven"),
+    _ => (),
+}
+
+- The '_' pattern wil match to any value, the '()' is a unit value, so nothing will happen if we get a value that is not 1,3,5 or 7. 
