@@ -1,0 +1,25 @@
+--- If_let syntax ---
+
+- The if left syntax allows the programmer to handle match expression that
+  only match to one pattern while ignoring the rest, consider the following code: 
+
+let some_u8_value = Some(0u8);
+match some_u8_value {
+    Some(3) => println!("three"),
+    _ => (),
+}
+
+- The code above matches only one pattern and discards the rest. We can
+  simplify this expression using the if let syntax: 
+
+if let Some(3) = some_u8_value {
+    println!("three");
+}
+
+- If let takes a pttern and an expression separated by an equal sign. 
+
+- The if let syntax is a faster way of expressing a specific type of match. We
+  can think of the if let statement as syntactic sugar for a match expression
+  that only matches one pattern and returns all other values.
+
+ 
