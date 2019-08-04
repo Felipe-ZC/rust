@@ -1,0 +1,17 @@
+--- Modules ---
+
+- Modules are used to organize code within a crate into groups.
+  They also control the privacy of items within a crate, that is,
+  whether an item can be accessed outside its implementation. 
+
+- Syntax: Used --lib keyword to create a new library: 
+
+	cargo new --lib name
+
+- We define a module by using the 'mod' keyword and specify the 
+  name of the module. Inside modules we can have other modules,
+  Modules can hold definitions for other items such as structs,
+  enums, constants, traits functions etc.
+
+
+

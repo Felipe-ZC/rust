@@ -1,0 +1,28 @@
+--- Packages and crates ---
+
+- Crate: binary or library.
+
+- Crate root: A source file that the Rust compiler starts from and
+  makes up the root module of your crate.
+
+- Package: One or more crates that provide a set of functionality.
+  Packages contain a Cargo.toml file that describes how to build its
+  crates.
+
+*** Note: A package mus contain zero or one library crates and as many binary crates as you'd like.
+
+- Cargo follows a convention that src/main.rs is the crate root
+  of a binary crate with the same name as the package. Same rules
+  apply for src/lib.rs.
+
+- Cargo passes the crate root files to rustc to build the library
+  or binary. 
+
+- Packages can have multiple binary crates by placing giles in the 
+  src/bin directory, each file will be a separate binary crate.
+
+- Crates group related functionality, and it is namespaced. If we 
+  want to access the Rng trait from the rand crate we would use 
+  it as follows:
+
+	rand::Rng
