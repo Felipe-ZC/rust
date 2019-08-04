@@ -22,4 +22,26 @@ match some_u8_value {
   can think of the if let statement as syntactic sugar for a match expression
   that only matches one pattern and returns all other values.
 
- 
+ - We can include an else statement with an if let, the block code that runs in
+   the else statement is the same block of code that would go in the '_'
+   placeholder case.
+
+- Remember the Coin enum where the Quarter variant also held a UsState value?
+  We can count all non-quarter coins using a match expression: 
+
+let mut count = 0;
+match coin {
+    Coin::Quarter(state) => println!("State quarter from {:?}!", state),
+    _ => count += 1,
+}
+
+- Or we could use an if let expression: 
+
+let mut count = 0;
+if let Coin::Quarter(state) = coin {
+    println!("State quarter from {:?}!", state);
+} else {
+    count += 1;
+} 
+
+
