@@ -8,10 +8,31 @@
 
 	cargo new --lib name
 
+
+*** Note: See projects/restaurant for the code referenced in this section.
+
 - We define a module by using the 'mod' keyword and specify the 
   name of the module. Inside modules we can have other modules,
   Modules can hold definitions for other items such as structs,
   enums, constants, traits functions etc.
 
+- By using modules we can group related definitions together and name why
+  they're related.
 
+- Earlier we mentioned that src/main.rs and src/lib.rs are called crate
+  roots. They are called crate roots because the contents of these two files
+  form a module name crate at the root of the module's structre, known as the
+  module tree:
 
+    crate
+    └── front_of_house
+        ├── hosting
+        │   ├── add_to_waitlist
+        │   └── seat_at_table
+        └── serving
+            ├── take_order
+            ├── serve_order
+            └── take_payment
+
+ 
+ 

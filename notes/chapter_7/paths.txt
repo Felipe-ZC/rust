@@ -1,0 +1,107 @@
+--- Paths ---
+
+- To instruct Rust where to find an item in a module tree, we use a path in
+  the same way we use a path when navigating a filesystem. A path can take two
+  forms: 
+
+    1) Absolute path: Starts from crate root by using a crate name or literal crate.   
+    2) Relative path: Starts from current module, uses self, super or an
+       identifier in the current module.
+
+- Both absolute and relative paths are followed by one or more identifiers and
+  separated by double colon operator (::)
+
+- Lets return to the restaurant module, how would we call the add_to_waitlist function?
+  Consider the following code:
+
+mod front_of_house {
+    mod hosting {
+        fn add_to_waitlist() {}
+    }
+}
+
+pub fn eat_at_restaurant() {
+    // Absolute path
+    crate::front_of_house::hosting::add_to_waitlist();
+
+    // Relative path
+    front_of_house::hosting::add_to_waitlist();
+}
+
+- The code above will not compile! If we were to run the code the compiler
+  would complain about the module 'hosting' being private.  
+
+- Modules define Rust's privacy boundary, which refers to the encapsulation
+  of implementation details. If we want to make a function or struct private
+  we can put it in a module!
+
+- In Rust, all items are private by default. Items in a parent module can't use
+  private items inside child modules, but items in child modules can use the
+  items in their ancestor modules. Child modules wrap and hider their
+  implementation details, but can see the context in which they're defined.
+
+- We can expose parts of our module to ouside code by using the pub keyword.
+
+--- Exposing paths with the pub keyword ---    
+
+- To fix the error with the hosting module, we can make hosting public but
+  this will still cause an error! If we were to run the following code the
+  compiler would complain that 'add_to_waitlist' is private:
+
+mod front_of_house {
+    pub mod hosting {
+        fn add_to_waitlist() {}
+    }
+}
+
+pub fn eat_at_restaurant() {
+    // Absolute path
+    crate::front_of_house::hosting::add_to_waitlist();
+
+    // Relative path
+    front_of_house::hosting::add_to_waitlist();
+}
+
+- By making the hosting module public, we can access it from other code
+  outside its implementation. However, the contents of hosting are still
+  private! Making the a module public does not make its contents public
+  as well!   
+
+- Lets make both the module and the contents of the module public: 
+
+mod front_of_house {
+    pub mod hosting {
+        pub fn add_to_waitlist() {}
+    }
+}
+
+pub fn eat_at_restaurant() {
+    // Absolute path
+    crate::front_of_house::hosting::add_to_waitlist();
+
+    // Relative path
+    front_of_house::hosting::add_to_waitlist();
+}     
+
+--- Relative paths with super ---
+
+- We can construct relative paths using the super keyword. This is the same a
+  starting a filesystem path with the '..' syntax.
+
+- Consider the following code snippet: 
+
+fn serve_order() {}
+
+mod back_of_house {
+    fn fix_incorrect_order() {
+        cook_order();
+        super::serve_order();
+    }
+
+    fn cook_order() {}
+}
+
+--- Public structs & enums --- 
+
+- If we use pub to designate a struct as public, the struct itself will be
+  public but the it's fields  will be private. 
