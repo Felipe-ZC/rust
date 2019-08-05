@@ -1,0 +1,86 @@
+--- Use keyword ---
+
+- There is a simplier way of specifying crate paths in Rust, we can bring a
+  path into scope and then call the items that path as if they're local with the
+  'use' keyword:
+
+mod front_of_house {
+    pub mod hosting {
+        pub fn add_to_waitlist() {}
+    }
+}
+
+use crate::front_of_house::hosting;
+
+pub fn eat_at_restaurant() {
+    hosting::add_to_waitlist();
+    hosting::add_to_waitlist();
+    hosting::add_to_waitlist();
+}
+
+- Adding use and the path in scope is similar to creating a symbolic link the
+  filesystem. Paths brought into scope with the 'use' keyword also check for
+  privacy.  
+
+- This is how we would specify a relative path with the use keyword:
+
+mod front_of_house {
+    pub mod hosting {
+        pub fn add_to_waitlist() {}
+    }
+}
+
+use self::front_of_house::hosting;
+
+pub fn eat_at_restaurant() {
+    hosting::add_to_waitlist();
+    hosting::add_to_waitlist();
+    hosting::add_to_waitlist();
+}
+
+- Using 'self' in this way might not be available in the future, this is an
+  inconsistency Rust developers are working to eliminiate.
+
+--- Idiomatic use paths --- 
+
+- There is a reason why we decided to speicfy use crate::front_of_house::hosting rather than using the full path up until add_to_waitlist: 
+
+mod front_of_house {
+    pub mod hosting {
+        pub fn add_to_waitlist() {}
+    }
+}
+
+use crate::front_of_house::hosting::add_to_waitlist;
+
+pub fn eat_at_restaurant() {
+    add_to_waitlist();
+    add_to_waitlist();
+    add_to_waitlist();
+}
+
+- Specifying a function's parent module with 'use' so we have to mention the
+  parent module when calling the function makes it clear that the function isn't
+  locally defined. If we don't specify the parent module, it isn't clear where 
+  add_to_waitlist is defined.  
+
+- On the other hand, specifying structs and enums should include the full path
+  to the item. There is no strong reason behind this idiom, its just the
+  convention that has emerged. There is an execption to this idiom, if we're
+  bringing in two items witht he same name, Rust does not allow this so we have
+  to specify the parent module:
+
+use std::fmt;
+use std::io;
+
+fn function1() -> fmt::Result {
+    // --snip--
+}
+
+fn function2() -> io::Result<()> {
+    // --snip--
+}
+
+--- Providing new names with the as keyword --- 
+
+ 
