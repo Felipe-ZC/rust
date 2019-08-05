@@ -83,4 +83,82 @@ fn function2() -> io::Result<()> {
 
 --- Providing new names with the as keyword --- 
 
- 
+- We can bring in two types with use that have the same name by using the 'as' keyword:
+
+use std::fmt::Result;
+use std::io::Result as IoResult;
+
+fn function1() -> Result {
+    // --snip--
+}
+
+fn function2() -> IoResult<()> {
+    // --snip--
+}
+
+--- Re-exporting names with pub use ---
+
+- When we bring a name into scope with the use keyword, that name is private
+  by default. To refer this name we can combine pub and use. This technique is
+  called re-exporting because we're bringing an item into scope but also making
+  it available to other items in that scope:
+
+mod front_of_house {
+    pub mod hosting {
+        pub fn add_to_waitlist() {}
+    }
+}
+
+pub use crate::front_of_house::hosting;
+
+pub fn eat_at_restaurant() {
+    hosting::add_to_waitlist();
+    hosting::add_to_waitlist();
+    hosting::add_to_waitlist();
+}
+
+--- Using external packages --- 
+
+- To bring an external package, we add a dependency to our Cargo.toml:
+
+[dependencies]
+rand = "0.5.5"
+
+- Adding this line to the Cargo.toml file tells Cargo to download the rand
+  package and any dependencies from crates.io and makes the rand package
+  available in our project.
+
+- To bring this pacakge into the scope of our package, we add the 'use' keyword
+  line starting with the name of the package and the items we want to bring
+  into scope:
+
+use rand::Rng;
+fn main() {
+    let secret_number = rand::thread_rng().gen_range(1, 101);
+}
+
+*** Note: The standard library (std) is also a crate that is external to our package. Std is shipped with Rust, so the is no need to mention it in the Cargo.toml file, but we do need to bring it in to scope with the 'use' keyword: 
+
+use std::collections::HashMap;
+
+--- Nested paths ---
+
+- We can use nested use statements to refer to multiple items that are defined in the same package:
+
+use std::cmp::Ordering; use std::io; <--------------->  use std::{cmp::Ordering, io};
+
+- We can use a nested path at any level in a path, which is useful when
+  combining two use statements: 
+
+use std::io;
+use std::io::Write;
+
+use std::io::{self, Write};
+
+--- The glob operator --- 
+
+- If we want to bring in all public items defined in a path into scope, we can
+  use the '*' character in a use statement. This symbol is called the glob
+  operator:  
+
+use std::collections::*;
