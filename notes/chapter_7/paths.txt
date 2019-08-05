@@ -104,4 +104,11 @@ mod back_of_house {
 --- Public structs & enums --- 
 
 - If we use pub to designate a struct as public, the struct itself will be
-  public but the it's fields  will be private. 
+  public but the it's fields  will be private. We can make each field public 
+  on a case-by-case basis (structs can have public and private fields)
+
+- If we make an enum public, all of its variants are public!
+
+
+
+ 
