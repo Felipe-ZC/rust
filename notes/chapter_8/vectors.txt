@@ -63,9 +63,47 @@
   first the element in the vector so why should the program care about changes
   at the end of the vector?
 
- 
+- This error is inherent to vectors, adding a new element onto the end of the
+  vector might require allocating new memeory and copying the old elements to
+  the new space. In that case, the reference to the first element we be pointing
+  to deallocated memory, borrowing rules prevent this situation from happening. 
 
+--- Iterating over vectors --- 
 
+- We can iterate over every element in a vector using a for loop:
 
+    let v = vec![100, 32, 57];
+    for i in &v {
+        println!("{}", i);
+    } 
 
- 
+- We can also iterate through mutable references as well: 
+
+    let mut v = vec![100, 32, 57];
+    for i in &mut v {
+        *i += 50;
+    }
+
+- To change the value, we must use the dereference operator (*) to get the value in "i"
+  before we can mutate it. 
+
+--- Using enums to store multiple types --- 
+
+- Remember that vectors can only store values that are the same type, while this is inconvenient
+  we can store multiple types in a vector using an enum.
+
+- Since the variants of an enum are defined under the same type, we can store elements of a different type in a vector:
+
+    enum SpreadsheetCell {
+        Int(i32),
+        Float(f64),
+        Text(String),
+    }
+
+    let row = vec![
+        SpreadsheetCell::Int(3),
+        SpreadsheetCell::Text(String::from("blue")),
+        SpreadsheetCell::Float(10.12),
+    ];
+
+     
