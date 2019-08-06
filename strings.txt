@@ -1,0 +1,99 @@
+--- Strings ---
+
+- In Rust, strings are implemented as a collection of bytes. Rust has only one
+  string type in the core languages, which the string slice str, that is usually
+  seen in its borrowed form &str. 
+
+- The String type is provided by Rust's standard library, its is a growable,
+  mutable, owned, UTF-8 encoded string type.
+
+- Both the String slice and the string slice types are UTF-8 encoded. 
+
+--- Working with strings --- 
+
+- Many of the same operations available with Vec<T> are available with String.
+
+- We can create string using the String::new() method or initialize them with some data using:
+
+    1) toString()
+        
+        let data = "initial contents";
+
+        let s = data.to_string();
+
+        // the method also works on a literal directly:
+        let s = "initial contents".to_string();
+    
+    2) String::from() 
+
+        let s = String::from("initial contents");
+
+- Strings are UTF-8 encoded, which means we can store any properly encoded data in them: 
+
+    let hello = String::from("السلام عليكم");
+    let hello = String::from("Dobrý den");
+    let hello = String::from("Hello");
+    let hello = String::from("שָׁלוֹם");
+    let hello = String::from("नमस्ते");
+    let hello = String::from("こんにちは");
+    let hello = String::from("안녕하세요");
+    let hello = String::from("你好");
+    let hello = String::from("Olá");
+    let hello = String::from("Здравствуйте");
+    let hello = String::from("Hola");
+
+- The String type can grow in size and can change its contents, just like a
+  vector. We can add data to a String using the push_str and push methods:
+
+    let mut s = String::from("foo");
+    s.push_str("bar"); // "foobar"
+
+    let mut s = String::from("lo");
+    s.push('l'); // "lol"
+
+- The push_str method takes in a string slice because we don't want to take
+  ownership of the parameter, we can still use s2 after push_str in the following
+  example:
+
+    let mut s1 = String::from("foo");
+    let s2 = "bar";
+    s1.push_str(s2);
+    println!("s2 is {}", s2);
+
+- We can combine two strings using the '+' operator, however, this method will
+  move the data in the lefthand operator:
+
+    let s1 = String::from("Hello, ");
+    let s2 = String::from("world!");
+    let s3 = s1 + &s2; // note s1 has been moved here and can no longer be used
+
+- The signature of the underlying method that is used whenever the '+' is used
+  looks something like this: 
+
+    fn add(self, s: &str) -> String {}
+
+- This isn't the exact signature implemented in the standard library, in the
+  STL add is implemented using generics. 
+
+- The signature of the add method looks like it only allows the addition of a
+  &str to a String type, however the type of s2 is &String. Why does the code
+  compile then?
+
+- We can use &s2 in the add method because the compiler can coerce the
+  &String argument into a &str. When we call the add method, Rust turns &s2
+  into &s2[..] using deref coercion. Add does not take ownership of s2,
+  therefore we can use it after calling add.
+
+- Notice the first parameter of the add method, we can see that add takes
+  onwership of self because self does not have a & (reference). This means the
+  s1 will be moved into the scope of the add call and will no longer be valid
+  after the function returns. 
+
+- Although is looks like the '+' looks like it copies both strings to create a
+  new one, it acutally takes ownership of the first string and appends a copy
+  of the second string to the first string. Lastly, the function returns
+  ownership of the result. This implementation is more efficient than copying
+  both strings.  
+    
+
+
