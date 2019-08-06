@@ -61,7 +61,9 @@
 
 - The code above looks like it should work, all we're doing is referencing the
   first the element in the vector so why should the program care about changes
-  at the end of the vector? 
+  at the end of the vector?
+
+ 
 
 
 
