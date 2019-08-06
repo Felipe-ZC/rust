@@ -1,3 +1,69 @@
 --- Vectors --- 
 
-- 
+- Vectrs are used to store values in a single data
+  structure that puts all the values next to each
+  other in memory.
+
+- This collection is best used when you processing alist of items.
+
+- To create a new vector:
+
+    let v: Vec<i32> = Vec::new();
+
+- We must add a type annotation to empty vectors since it cannot deduce what
+  type we wish to store in this vector. Rust can often infer the type of value 
+  you want to store once you insert values. 
+
+- Rust features a macro for creating a new vector based on the values you give it:
+
+    let v = vec![1, 2, 3];
+
+--- Upading a vector --- 
+
+- To insert elements into a vector we can use the insert method: 
+
+    let mut v = Vec::new();
+
+    v.push(5);
+    v.push(6);
+    v.push(7);
+    v.push(8);
+
+- If a vector is dropped (out of scope), all of the values it holds are also dropped.  
+
+--- Reading vectors ---
+
+- There are two ways of refering to a value stored inside a vector:
+ 
+    let v = vec![1, 2, 3, 4, 5];
+
+    let third: &i32 = &v[2]; // Indexing
+    println!("The third element is {}", third);
+
+    // Get method
+    match v.get(2) {
+        Some(third) => println!("The third element is {}", third),
+        None => println!("There is no third element."),
+    }
+
+- Remember borrowing rules! Consider the following code snippet that won't compile:
+
+    let mut v = vec![1, 2, 3, 4, 5];
+
+    let first = &v[0];
+
+    v.push(6);
+
+    println!("The first element is: {}", first);
+
+- When we try to run this code the compiler will complain about a borrowing a
+  mutable that is also borrowed as immutable. 
+
+- The code above looks like it should work, all we're doing is referencing the
+  first the element in the vector so why should the program care about changes
+  at the end of the vector? 
+
+
+
+
+ 
