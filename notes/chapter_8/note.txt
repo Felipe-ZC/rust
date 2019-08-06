@@ -1,0 +1,1 @@
+All the data structures covered in this chapter store data on the heap!
