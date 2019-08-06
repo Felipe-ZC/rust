@@ -95,5 +95,45 @@
   ownership of the result. This implementation is more efficient than copying
   both strings.  
     
+- If we need to concat. multiple strings, the '+' operator gets a bit
+  confusing. We can use the format! macro to perform complex string concat:
 
+    let s1 = String::from("tic");
+    let s2 = String::from("tac");
+    let s3 = String::from("toe");
 
+    //let s = s1 + "-" + &s2 + "-" + &s3;
+    let s = format!("{}-{}-{}", s1, s2, s3);
+
+- The format! macro works in the same way as println! but instead of printing
+  output it returns a string with specified content. This marco does not take
+  ownership of any of its parameters.
+
+--- Indexing and strings --- 
+
+- Rust does not support string indexing, this is because of the internal
+  representation of the String type.
+
+- A String is a wrapper over a Vec<u8>, consider the following example:
+
+    let len = String::from("Hola").len();
+
+- In this case, len will be 4 because the vector storing the string "Hola" is
+  4 bytes long, each letter takes one byte when encoded in UTF-8. Now consider
+  this line:
+
+    let len = String::from("Здравствуйте").len(); 
+
+- You might think that len is 12, but Rust's answer is acutally 24. This is
+the number of bytes it takes to encode the string "Здравствуйте" in UTF-8.
+Unicode's scalar value in this particular string takes 2 bytes of storage.
+
+Therefore, an index into the strings bytes will not always correlate to a valid Unicode scalar value!
+
+- Consider the following example: 
+
+    let hello = "Здравствуйте";
+    let answer = &hello[0]; 
+
+
+ 
