@@ -1,0 +1,102 @@
+ --- Hash maps ---
+
+- The hashmap type HashMap<K, V> stored a mapping of keys type K to values
+  of type V. It performs this mapping via a hashing function, which determines
+  how to place these key, value pairs in memory. 
+
+- We can create new empty hash maps using the new method, elements can be added
+  into the datat structure using insert:
+
+    use std::collections::HashMap;
+
+    let mut scores = HashMap::new();
+
+    scores.insert(String::from("Blue"), 10);
+    scores.insert(String::from("Yellow"), 50);
+
+- We need to 'use' the HashMap collection from standard library!
+
+- Just like vectors, hash maps store their data on the heap.  
+
+- HashMaps are homogenous, all keys must of the same type and all values must
+  be of the same type.
+
+- Another way of constructing a hash map is to use the 'collect' method on a
+  vector of tuples, where each tuple consists of a key and a value.
+
+- The 'collect' method gathers data into a number of collection types. If we
+  had two different vectors, one for keys and the other for values, we could
+  use the zip method to create a vector of tuples where the first value of the
+  first vector is paired with  the first value of the second vector and so forth.
+  After running zip, we could use the collection method to turn that vector of
+  tuples into a hashmap:
+
+    use std::collections::HashMap;
+
+    let teams  = vec![String::from("Blue"), String::from("Yellow")];
+    let initial_scores = vec![10, 50];
+
+    let scores: HashMap<_, _> = teams.iter().zip(initial_scores.iter()).collect();
+
+- Notice how we must the placehold type annotation in HashMap<_, _>, this is
+  needed because its possible to collect into many different data structures and
+  Rust doesn't know which one you want unless you specify. Rust can infer the types 
+  that go into the hashmap based on the types of the values in the vector , so we 
+  use the placeholder types. 
+
+--- Ownership --- 
+
+- Ownership of values in a hashmaps depends on the type. Types that implement
+  the Copy trait, like i32  , are copied into the hash map. Owned values like
+  'String' are moved into the hash map, the ownership of these values is
+  transfered to the hash map:
+
+    use std::collections::HashMap;
+
+    let field_name = String::from("Favorite color");
+    let field_value = String::from("Blue");
+
+    let mut map = HashMap::new();
+    map.insert(field_name, field_value);
+    // field_name and field_value are invalid at this point, try using them and
+    // see what compiler error you get!
+
+- If we insert references to values in the hash map, the values won't be moved
+  into the hash map. These values must be valid for at least as long as the hash
+  map is valid. 
+
+--- Accessing values in a hash map --- 
+
+- We can access values in a hash map by providing its key to the 'get' method,
+  as shown here:
+
+    use std::collections::HashMap;
+
+    let mut scores = HashMap::new();
+
+    scores.insert(String::from("Blue"), 10);
+    scores.insert(String::from("Yellow"), 50);
+
+    let team_name = String::from("Blue");
+    let score = scores.get(&team_name);
+
+- The get method returns an Option<&V> so score will contain the value
+  Some(&10), if there is no value for that key in the hash map then get will
+  return None. 
+
+- We can use a for loop to iterate over each key, value pair:
+
+    use std::collections::HashMap;
+
+    let mut scores = HashMap::new();
+
+    scores.insert(String::from("Blue"), 10);
+    scores.insert(String::from("Yellow"), 50);
+
+    for (key, value) in &scores {
+        println!("{}: {}", key, value);
+    }
+
+--- Updating hash maps ---
+
+  
