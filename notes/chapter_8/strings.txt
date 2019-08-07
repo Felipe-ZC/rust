@@ -174,4 +174,47 @@ Therefore, an index into the strings bytes will not always correlate to a valid 
 
 - Indexing into a string is often a bad idea, because it is unclear what the
   return type of the string-indexing operation should be: byte value, character
-  or a grapheme cluster. 
+  or a grapheme cluster.
+
+- Consider the following slice: 
+
+    let hello = "Здравствуйте";
+    let s = &hello[0..4];
+
+- 's' will be a string containing the first 4 bytes of hello, each of these
+   characters are 2 bytes so s will be "Зд". 
+
+- If we were to access $hello[0..1] then the Rust kernel would panic at runtime
+  just like if we accessed an invalid index in a vector or array. Use caution 
+  when creating string slices.
+
+--- Iterating over strings --- 
+
+- Luckily, we can access string elements in other ways. If we need to perform
+  operations on individual Unicode scalar values (chars) the best way to do so is
+  using the chars method.
+
+- Calling the chars method on a string will separate its charcters and returns
+  values of the type char:
+
+    for c in "Hello".chars() {
+        println!("{}", c);
+    }
+
+- This code would print: 
+
+    "H"
+    "E"
+    "L"
+    "L"
+    "O"
+
+- Using the bytes method returns each raw byte for the string:
+
+    for c in "Hello".bytes() {
+        println!("{}", c);
+    }
+
+- Getting grapheme clusters from strings is complex and not provided by the
+  standard library. 
+
