@@ -97,6 +97,72 @@
         println!("{}: {}", key, value);
     }
 
---- Updating hash maps ---
+--- Updating hash maps ---
 
-  
+- The number of key, value pairs in a hash map is growable, however, each key
+  can have one and only one value. When you we want to update the data in a hash
+  map we have to decide how to handle the case when a key already has a value
+  assinged. 
+
+- We can replace the old value with a new value, or keep the old value and only
+  add the new value if the key doesn't already have a value. We can even combine 
+  the new value with the old value:
+
+
+1) Overwriting
+    
+    - If we inset a key, value pair into a hash map then insert the same key with a different value, 
+      the value associated with that key will be replaced:
+
+        use std::collections::HashMap;
+
+        let mut scores = HashMap::new();
+
+        scores.insert(String::from("Blue"), 10);
+        scores.insert(String::from("Blue"), 25);
+
+        println!("{:?}", scores);
+   
+    - This code prints {"Blue": 25}.
+
+2) Inserting value only if key has no value
+
+    - Rust features a special API for checking whether a particular key has a
+      value and if it doesn't, insert a value for it. 
+
+    - This function is called 'entry', it takes in the key you want to check as
+      a parameter. This function returns an enum caled 'Entry' that represents a 
+      value that might or might not exist:
+
+        use std::collections::HashMap;
+
+        let mut scores = HashMap::new();
+        scores.insert(String::from("Blue"), 10);
+
+        scores.entry(String::from("Yellow")).or_insert(50);
+        scores.entry(String::from("Blue")).or_insert(50);
+
+        println!("{:?}", scores);
+
+   - The or_insert method on the Entry enum returns a mutable reference to the value 
+     if it exists, otherwise it inserts the paramterts as th new value for this key 
+     and returns a mutable reference to the new value. 
+
+3) Updating a value based on the old value 
+
+    - We can update a key's value in a hashmap based on its old value, consider the 
+      following example:
+
+        use std::collections::HashMap;
+
+        let text = "hello world wonderful world";
+
+        let mut map = HashMap::new();
+
+        for word in text.split_whitespace() {
+            let count = map.entry(word).or_insert(0);
+            *count += 1;
+        }
+
+        println!("{:?}", map);
+
