@@ -46,7 +46,7 @@ fn generate_int_measures(range: (i32, i32)) -> Vec<i32> {
     result_vec
 }
 
-fn calculate_median(measures: &Vec<i32>) -> i32{
+fn calculate_median(measures: &Vec<i32>) -> i32 {
     let median_index = measures.len() as i32 as i32 / 2;
     measures[median_index as usize]
 }
