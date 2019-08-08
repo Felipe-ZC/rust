@@ -11,6 +11,11 @@ fn main() {
     io::stdin().read_line(&mut user_in)
         .expect("Error! Could not read line.");
     
+    // Map each string in user_in to the parse function for i32's.
+    // Map returns an iterator where each value is a Result (Some or None)
+    // wrapped in an Option (Ok, None). This is because map applies the parse 
+    // function to each element in user_in, map returns an iterator which is a
+    // result object, parse returns an options object.
     let mut parts = user_in.trim().split_whitespace()
         .map(|word| word.parse::<i32>());
    
