@@ -5,6 +5,7 @@ fn main() {
     let mut user_str = String::new();
     
     println!("Please enter a string");
+    
     io::stdin().read_line(&mut user_str)
         .expect("Failed to read user input");
 
