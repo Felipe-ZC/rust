@@ -131,4 +131,73 @@
   We can print the error message when creating the file by using ':?' in the 
   print statement.
 
- 
+- While the match statement is very powerful it does make our code a bit hard to
+  read. A more seasoned Rust programmer might write something like this: 
+
+	use std::fs::File;
+	use std::io::ErrorKind;
+
+	fn main() {
+	    let f = File::open("hello.txt").unwrap_or_else(|error| {
+		if error.kind() == ErrorKind::NotFound {
+		    File::create("hello.txt").unwrap_or_else(|error| {
+			panic!("Problem creating the file: {:?}", error);
+		    })
+		} else {
+		    panic!("Problem opening the file: {:?}", error);
+		}
+	    });
+	}
+
+--- Shortcuts for error handling --- 
+
+- We can use the unwrap method from the Result<T, E> type to write less verbose
+  code. This method is implemented just like the match expressions we wrote in 
+  the last section. If the result value is Ok, the unwrap method returns the 
+  value inside the Ok variant. If the result is Err, unwrap will call the 
+  panic! macro for us:
+
+	use std::fs::File;
+
+	fn main() {
+	    let f = File::open("hello.txt").unwrap();
+	}
+
+- If we run this code we should get an error message from the panic! call that
+  the unwrap method makes.
+
+- The expect method is similar to unwrap, it allows use to choose the panic!
+  error message. The syntax is as follows:
+
+	use std::fs::File;
+
+	fn main() {
+	    let f = File::open("hello.txt").expect("Failed to open hello.txt");
+	}
+
+--- Propagating errors ---
+
+- When we're wiritng a function whose implementation calls something that might fail,
+  we can return the error to the calling code so that it can decide what to do:
+
+	use std::io;
+	use std::io::Read;
+	use std::fs::File;
+
+	fn read_username_from_file() -> Result<String, io::Error> {
+	    let f = File::open("hello.txt");
+
+	    let mut f = match f {
+		Ok(file) => file,
+		Err(e) => return Err(e),
+	    };
+
+	    let mut s = String::new();
+
+	    match f.read_to_string(&mut s) {
+		Ok(_) => Ok(s),
+		Err(e) => Err(e),
+	    }
+	}
+
+  
