@@ -1,0 +1,84 @@
+--- Error handling ---
+
+- Rust groups errors into two major categories:
+	1) Recoverable: These can be reported to the user so as to retry the operation.
+	2) Unrecoverable: Usually bugs or logic errors that cause an operation to fail. 
+
+- Rust does not have exceptions! It has the type Result<T, E> for recoverable
+  errors and the panic! macro for unrecoverable errors.
+
+--- Unrecoverable errors --- 
+
+- With these kinds of errors, theres usually nothing we can do to recover from them. 
+
+- In this case, we have the panic! macro that will print an error message, unwind and
+  clean up the stack and then quit. Unwinding is the process in which Rust walks back
+  up the stack and cleans data from each function it encounters.
+
+- Unwinding and cleanup is a lot work, another alternative is to immediately abort 
+  the program without cleaning up the data. Memory used by this program will be cleaned
+  up by the OS. This is useful when we need to make the resulting binary as small as 
+  possible: 
+
+	[profile.release]
+	panic = 'abort'  
+
+--- Backtrace a panic! --- 
+
+- Sometimes, the panic! macro is called from code that our code calls. In this case, 
+  the resulting error data refers to some other piece of code. We can backtrace the
+  functions in panic! to figure out what part of our code is causing the problem.
+
+- Consider the following example that causes our program to panic:
+
+	fn main() {
+	    let v = vec![1, 2, 3];
+
+	    v[99];
+	}
+
+- Here we are accessing an invalid index in the vector 'v'. In other langugaes
+  like C, this code will compile and return some kind of value, even if that
+  location in memeory doesnt belong to the vector/array in our code. This is 
+  known as a buffer overread and can lead to security vulnerabilites if an 
+  attacker is able ot manipulate the index in such a way as to read data they 
+  shouldn't be allowed that is stored after the array.
+
+- Rust panics if you try to access an element outside the legal bounds of a 
+  vector.
+
+- We can set the RUST_BACKTRACE environment variable toa ny value other than zero, to see
+  a list of functions called by our program:
+
+	RUST_BACKTRACE=1 cargo run   
+
+--- Recoverable errors --- 
+
+- We can use the Result enum to handle errors that are not serious enough to warrant the
+  use of the panic! macro.
+
+- Recall that the Result enum has two variants: 
+
+	enum Result<T, E> {
+	    Ok(T),
+	    Err(E),
+	}
+
+- T & E are generic type parameters and because of this we can use the Result type
+  as an Exception class.
+
+- Lets write a function that returns a Result because it could fail: 
+
+	use std::fs::File;
+
+	fn main() {
+	    let f = File::open("hello.txt");
+	}
+
+- How do we know what File::open returns a result? We can look at the docs or give f 
+  a wrong type annotation. This way Rust will not compile the code but print out the 
+  type that its expecting for f.
+
+
+
+  
