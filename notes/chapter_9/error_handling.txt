@@ -229,4 +229,15 @@
         Ok(s)
     }
 
-- 
+- The '?' operator places after a Result value works the same way as a match
+  expression would. If the value of Result is Ok then the value inside the Ok
+  will get returned from this expression and the program will continue execution.
+  If the value returned is an Err, the Err will be returned as if we had used the
+  return keyword, the function stops execution and error value gets propagated to
+  the calling code. 
+
+- There is one big difference between the '?' and the match expresion. Error
+  values that have the '?' operator called on them go through the 'from'
+  function. This function is used to convert errors from one type into another.
+
+-  
