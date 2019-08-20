@@ -200,4 +200,33 @@
 	    }
 	}
 
-  
+- Notice the return type of the function above, it returns a Result type of
+  String and io::Error. This means that the return value of this function can be
+  valid or invalid, sort of like a Promise! 
+
+- If the function succeeds without any errors, it returns an Ok value that
+  holds a String. Otherwise it would return an Err value with an io::Error
+  value inside of it.
+
+- In this case, we're not panicing if the opening the file fails, instead we
+  return the error to the calling code and let it handle the error on its own.
+  We follow the same approach when reading the contents of the text file into
+  the string 's'. 
+
+--- Shortcut for error propagation ---  
+
+- The following code snippet is a condensed form of the
+  read_username_from_file function discussed in the last section:
+
+    use std::io;
+    use std::io::Read;
+    use std::fs::File;
+
+    fn read_username_from_file() -> Result<String, io::Error> {
+        let mut f = File::open("hello.txt")?;
+        let mut s = String::new();
+        f.read_to_string(&mut s)?;
+        Ok(s)
+    }
+
+- 
