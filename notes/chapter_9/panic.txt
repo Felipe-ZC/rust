@@ -1,0 +1,80 @@
+--- To panic! or not to panic! ---
+
+- There are few situtations where its more appropriate to panic! instead of
+  returning a Result:
+
+    * Writing examples, prototypes and tests
+    * When you have more information than the compiler 
+        
+        - It is OK to call 'unwrap' when we have some logic that ensures the
+          result will have an OK value, but the compiler does not understand
+          this logic:
+
+            use std::net::IpAddr;
+            let home: IpAddr = "127.0.0.1".parse().unwrap();
+
+       - Here we're creating an IpAddr from a hardcoded string, we know that
+         127.0.0.1' is a valid ip address so it is acceptable to use unwrap. The return
+         type of the parse method is still the same, we'll still get a Result value and
+         the compiler will make us handle the Result as if the Err variant is a
+         possibility.  
+
+- It is advisable to panic when your code could end up in a bad (broken) state:
+    
+    * The bad state is not something thats expected to happen occasionally.
+    * Your code needs to rely on not being in this bad state.
+    * There no good way to encode this information in the types you use. 
+
+- If someone calls yours code and passes in values that don't make sense, it
+  might be a good idea to call panic! and alter the programmer using your
+  library that their a bug in their code.
+
+- If you're calling external code that is out of your control and it returns an
+  invalid state that you have no way of fixing, it might be a good idea to call
+  panic. 
+
+- When failure is expected, its better to return a Result than to have our code
+  panic.
+
+- Whenever your code performs operations on values, those values should be
+  validated first and panic if they are not valid. Function often have
+  contracts, their behavior is only guaranteed if the inputs meet specific
+  requirements.
+
+--- Custom validation types ---
+
+- We can use Rust's type system to create custom types that validate input
+  data upon creation. The following example is a custom type that will panic if
+  the value input into is not between 1 and 100:
+
+    pub struct Guess {
+        value: i32,
+    }
+
+    impl Guess {
+        pub fn new(value: i32) -> Guess {
+            if value < 1 || value > 100 {
+                panic!("Guess value must be between 1 and 100, got {}.", value);
+            }
+
+            Guess {
+                value
+            }
+        }
+
+        pub fn value(&self) -> i32 {
+            self.value
+        }
+    }
+
+- We need the value method, sometimes called a 'getter', because the value
+  field in the public Guess struct is private! It is important that this field be
+  private because we don't any outside code to modify or set the value in Guess
+  directly. 
+
+- Code outside the implementation of Guess MUST call Guess:new to create a new
+  instance of Guess. This ensures there is no way for a Guess to have value
+  that has been checked by the conditions in the Guess::new function.
+
+- Using a custom type like that one above avoids the need to perform any
+  additional checks outside of the Guess struct.  
