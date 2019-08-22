@@ -1,0 +1,79 @@
+--- Extracting a function ---
+
+- We can reduce superflous code by extracting functions. Consider the
+  following program thats find the largest number in a list:
+
+    fn main() {
+        let number_list = vec![34, 50, 25, 100, 65];
+
+        let mut largest = number_list[0];
+
+        for number in number_list {
+            if number > largest {
+                largest = number;
+            }
+        }
+
+        println!("The largest number is {}", largest);
+    }
+
+- To find the largest number in two different lists of numbers, we can
+  duplicate the code and use thw same logic in two different places: 
+
+    fn main() {
+        let number_list = vec![34, 50, 25, 100, 65];
+
+        let mut largest = number_list[0];
+
+        for number in number_list {
+            if number > largest {
+                largest = number;
+            }
+        }
+
+        println!("The largest number is {}", largest);
+
+        let number_list = vec![102, 34, 6000, 89, 54, 2, 43, 8];
+
+        let mut largest = number_list[0];
+
+        for number in number_list {
+            if number > largest {
+                largest = number;
+            }
+        }
+
+        println!("The largest number is {}", largest);
+    }
+
+- Although the code above compiles and is logically correct, it is tedious and
+  error prone. Also this code is hard to update as we need to change it in
+  multiple places. To eliminate duplication we can extract the logic that finds
+  the largest number and place it in a function:
+
+    fn largest(list: &[i32]) -> i32 {
+        let mut largest = list[0];
+
+        for &item in list.iter() {
+            if item > largest {
+                largest = item;
+            }
+        }
+
+        largest
+    }
+
+    fn main() {
+        let number_list = vec![34, 50, 25, 100, 65];
+
+        let result = largest(&number_list);
+        println!("The largest number is {}", result);
+
+        let number_list = vec![102, 34, 6000, 89, 54, 2, 43, 8];
+
+        let result = largest(&number_list);
+        println!("The largest number is {}", result);
+    }
+
+- We can use generics to abstract this logic even further so it works on a
+  variety of different types of lists rather than just on a list of i32 values. 
