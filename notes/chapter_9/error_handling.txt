@@ -240,4 +240,40 @@
   values that have the '?' operator called on them go through the 'from'
   function. This function is used to convert errors from one type into another.
 
--  
+-  When the '?' operator calls the 'from' function, the error type recieved is
+   converted into the error type defined in the return type of the current
+   function.
+
+- We can re-write the code above be even simpler by combining the two '?' ops:
+
+    use std::io;
+    use std::io::Read;
+    use std::fs::File;
+
+    fn read_username_from_file() -> Result<String, io::Error> {
+        let mut s = String::new();
+
+        File::open("hello.txt")?.read_to_string(&mut s)?;
+
+        Ok(s)
+    }
+
+- There's a way of making this even shorter:
+
+    use std::io;
+    use std::fs;
+
+    fn read_username_from_file() -> Result<String, io::Error> {
+        fs::read_to_string("hello.txt")
+    }
+
+- The function read_to_string opens the file, creates a new String, reads the
+  contents of the file into the newly created string and returns said string. 
+
+*** NOTE: The '?' can only be used on in functions that return Result.
+
+- When writing code that doesn't return a Result type and you want to use '?' when calling other functions that return a Result we can do the following:
+    * Change the result type of the function to be a Result
+    * Handle the Result with a match
+
+
