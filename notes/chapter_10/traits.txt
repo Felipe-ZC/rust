@@ -1,0 +1,93 @@
+--- Traits ---
+
+- A trait is a flag for the Rust compiler that tells it a particular type has
+  some specific functionality and can be shared with other types. 
+
+- Traits can be used to abstract shared behavior and use trait bounds to
+  specify that a generic can be any type that has certain behavior. 
+
+- A type's behavior consists of the methods we can call on that type. Trait
+  definitions are a way to group method signatures together to define a set of
+  behvarios that can accomplish some purpose.  
+
+- Ex 1) Let’s say we have multiple structs that hold various kinds and amounts of text:
+  a NewsArticle struct that holds a news story filed in a particular location and
+  a Tweet that can have at most 280 characters along with metadata that indicates
+  whether it was a new tweet, a retweet, or a reply to another tweet.
+
+- We want to make a media aggregator library that can display summaries of data
+  that might be stored in a NewsArticle or Tweet instance:
+
+	pub trait Summary {
+		fn summarize(&self) -> String;
+	}
+
+- Here we've declared the trait Summary, inside the curly brackets we clare
+  the method signature that describes the behaviors of the types that implment
+  this trait.
+
+- After the method signature we end the definition with a semicolon. Each type
+  implementing this trait must provide its own custom body for the method. The
+  compiler will make sure that any type that has the summary trait will have the
+  method summarize with this signature exactly!
+
+- Traits can have multiple methods in their definition, the signatures are
+  listed one per line and each line ends in a semicolon.
+
+- After defining our trait, we must implement it on some type(s). Consider the
+  following code based on Ex 1:
+
+	pub struct NewsArticle {
+		pub headline: String,
+		pub location: String,
+		pub author: String,
+		pub content: String,
+	}
+
+	impl Summary for NewsArticle {
+		fn summarize(&self) -> String {
+			format!("{}, by {} ({})", self.headline, self.author, self.location)
+		}
+	}
+
+	pub struct Tweet {
+		pub username: String,
+		pub content: String,
+		pub reply: bool,
+		pub retweet: bool,
+	}
+
+	impl Summary for Tweet {
+		fn summarize(&self) -> String {
+			format!("{}: {}", self.username, self.content)
+		}
+	}
+
+- In this example we have defined our trait and our types in the same lib.rs
+  file, so they're all in the same scope.  
+
+- Let's say that our trait is defined in a crate called aggregator, and someon
+  else wants to use our craten to implement the Summary trait on a struct
+  defined within their library's scope. First, the person using our crate would
+  have to bring it into scope through the 'use' syntax:
+
+	use aggregator::Summary;
+
+- This would enable the user to implement summary for their type. The Summary
+  trait would need to be public for another crate to implment it.
+
+*** Note: We can only implement traits on a type if either the trait or the type is local to our crate!
+
+- This means that we can implement std lib traits like Display on custom types
+  like Tweet as part our aggregator crate because Tweet is local to our crate.
+  Likewise we can implment the Summary trait on a type defined in the std lib
+  like Vec<T> in our aggregator crate because Summary is local to our crate!
+
+- We can't implement the Display trait on a Vec<T> within our aggregator crate
+  because Display and Vec<T> are defined in the std lib and are not local to
+  our aggregator crate.
+
+- This restriction is part of a property of programs called coherence. More
+  specifically, the orphan rule. Without this rule, two crates could implement
+  the same same trait for the same type, and Rust wouldn't know which
+  implementation to use. 
