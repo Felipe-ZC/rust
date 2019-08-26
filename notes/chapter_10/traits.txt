@@ -128,4 +128,69 @@
 		}
 	} 
 
+- We can now call summarize on instances of Tweet and the default
+  implementation of summarize will call the definition of summarize_author.
+  Because we've implemented the summarize_author method, the Summary trait has
+  gived us the behavior of the summarize method without having to write any more
+  code: 
+
+	let tweet = Tweet {
+		username: String::from("horse_ebooks"),
+		content: String::from("of course, as you probably already know, people"),
+		reply: false,
+		retweet: false,
+	};
+
+	println!("1 new tweet: {}", tweet.summarize());
+	
+- This code prints: "1 new tweet: (Read more from @horse_ebooks..."
+
+--- Traits as paramters --- 
+
+- We can use traits to define functions that accept many types. 
+
+- For example, we can define a notify function that calls the summarize method
+  on an 'item' parameter which is some type that implements the Summary trait:
+
+	pub fn notify(item: impl Summary) {
+		println!("Breaking news! {}", item.summarize());
+	} 
+
+- Instead of a concrete type for the item parameter, we specify the impl
+ keyword and trait name. This parameter accepts any type that implements the
+ specified trait.   
+
+- We can pass in any instance of NewsArticle or Tweet and we can use any
+  methods that come from the summary trait on item. 
+
+--- Trait bound syntax --- 
+
+- The impl Trait syntax from the previous section is actually syntactic sugar
+  for a longer form called a trait bound:
+
+	pub fn notify<T: Summary>(item: T) {
+		println!("Breaking news! {}", item.summarize());
+	}
+
+- This longer form is equivalent to the example in the previous section. Whil
+  this form is more verbose than using impl Trait, it allow us to express complex
+  definitions clearly:  
+
+	pub fn notify(item1: impl Summary, item2: impl Summary)  <===> pub fn notify<T: Summary>(item1: T, item2: T) 
+
+- Although these are similar, implt Summary allows item1 and item2 to have
+  different types. If we wanted to force both parameters to be of the same type,
+  we would have to use a trait bound.
+
+- We can use a special syntax to specify more than one trait bound:
+
+	pub fn notify(item: impl Summary + Display) {
+
+- Now the function notify will accept any type that implements BOTH Summary
+  AND Display!
+
+- We can use this syntax on generic  trait bounds as well: 
+
+	pub fn notify<T: Summary + Display>(item: T) {
+
 -  
