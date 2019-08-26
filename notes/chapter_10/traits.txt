@@ -90,4 +90,42 @@
 - This restriction is part of a property of programs called coherence. More
   specifically, the orphan rule. Without this rule, two crates could implement
   the same same trait for the same type, and Rust wouldn't know which
-  implementation to use. 
+  implementation to use.
+
+--- Default implementations ---  
+
+- We can specify some default implementation for our traits methods by
+  defining the method signature and body:  
+
+	pub trait Summary {
+		fn summarize(&self) -> String {
+			String::from("(Read more...)")
+		}
+	}
+
+- To use a default implementation of a trait on one of our types, we specify an
+  empty impl block:
+
+	impl Summary for NewsArticle {}
+
+- Default implementations can call other methods in the same trait, even if
+  those methods do not have a default implementation:
+
+	pub trait Summary {
+		fn summarize_author(&self) -> String;
+
+		fn summarize(&self) -> String {
+			format!("(Read more from {}...)", self.summarize_author())
+		}
+	}
+
+- To use this version of summar we only need to provide an implementation for
+  summarize_author:
+
+	impl Summary for Tweet {
+		fn summarize_author(&self) -> String {
+			format!("@{}", self.username)
+		}
+	} 
+
+-  
