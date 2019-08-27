@@ -302,4 +302,12 @@
 		println!("The largest char is {}", result);
 	} 
 
--  
+- If we don't want to restrict the largest function to types that implement
+  Copy, we could specify that T has the bound Clone instead of Copy. Then we
+  would clone each value in the slice, potentially making more heap allocations
+  in the case of data types like String. This can be slower if we're working with
+  large amounts of data. 
+
+- Another way to implement the largest function is to return a refernce to a T
+  value. If we change the return Type to &T instead of T, we wouldn't need the
+  Clone or Copy traits and we could avoid heap allocations!  
