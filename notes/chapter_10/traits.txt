@@ -193,4 +193,113 @@
 
 	pub fn notify<T: Summary + Display>(item: T) {
 
--  
+- Using too many trait bounds has its downsides, each generic has its own
+  trait bounds, so functions with multiple generics will have very verbose
+  signatures making them hard to read. For this reason, rust has a special syntax
+  for sepcifying trait bounds:   
+
+	fn some_function<T: Display + Clone, U: Clone + Debug>(t: T, u: U) -> i32 
+	-------------------------------------------------------------------------
+	fn some_function<T, U>(t: T, u: U) -> i32
+    where T: Display + Clone,
+          U: Clone + Debug
+
+--- Returning types that implement traits ---
+
+- We can use the impl Trait syntax in a function signature to indicate the
+  return value is some type that implements a trait:  	
+
+	fn returns_summarizable() -> impl Summary {
+		Tweet {
+			username: String::from("horse_ebooks"),
+			content: String::from("of course, as you probably already know, people"),
+			reply: false,
+			retweet: false,
+		}
+	}
+
+- By using impl Summary for the return type, we're returning some type that
+  implements summary without naming the concrete type. In this case the funciton
+  returns_summarizable returns a Tweet but the code calling this function does
+  not know that. 
+
+*** Note: You can only use the impl Trait syntax if you're returning a single type!
+
+--- Largest function rewritten ---
+
+- Lets take a look at the error that prevented our largest function from
+  compiling:
+
+	error[E0369]: binary operation `>` cannot be applied to type `T`
+	 --> src/main.rs:5:12
+	  |
+	5 |         if item > largest {
+	  |            ^^^^^^^^^^^^^^
+	  |
+	  = note: an implementation of `std::cmp::PartialOrd` might be missing for `T`
+
+- In the body of our largest function we want to compare two values of Type T
+  using the '>' opeartor. Because that opeartor is defined as the default
+  method on the std lib trait std::cmp::PartialOrd, we need to sepcify this trait
+  bound for T so the largest function can work on slices of any type that
+  implement this trait. We don't need to bring PartialOrd into scope because it
+  is included in the prelude: 
+
+	fn largest<T: PartialOrd>(list: &[T]) -> T {
+
+- Now if we try to compile our code again we will run into the following errors:
+
+	error[E0508]: cannot move out of type `[T]`, a non-copy slice
+	 --> src/main.rs:2:23
+	  |
+	2 |     let mut largest = list[0];
+	  |                       ^^^^^^^
+	  |                       |
+	  |                       cannot move out of here
+	  |                       help: consider using a reference instead: `&list[0]`
+
+	error[E0507]: cannot move out of borrowed content
+	 --> src/main.rs:4:9
+	  |
+	4 |     for &item in list.iter() {
+	  |         ^----
+	  |         ||
+	  |         |hint: to prevent move, use `ref item` or `ref mut item`
+	  |         cannot move out of borrowed content
+
+- The key error here is "cannot move out of type [T], a non-copy slice". In
+  our non generic versions of the largest funcion, we were trying to find the
+  largest values in i32 or char types. These types implement a Trait called
+  'Copy', which means that they have a known size that can be stored on the
+  stack. 
+
+- Making the list function generic caused the list paramter to include types
+  that do not implement the Copy trait. We wouldnt be able to move that value
+  out of list[0] and into the largest variable. To fix the error above we can
+  add the Copy trait to our trait bound as follows:
+
+	fn largest<T: PartialOrd + Copy>(list: &[T]) -> T {
+		let mut largest = list[0];
+
+		for &item in list.iter() {
+			if item > largest {
+				largest = item;
+			}
+		}
+
+		largest
+	}
+
+	fn main() {
+		let number_list = vec![34, 50, 25, 100, 65];
+
+		let result = largest(&number_list);
+		println!("The largest number is {}", result);
+
+		let char_list = vec!['y', 'm', 'a', 'q'];
+
+		let result = largest(&char_list);
+		println!("The largest char is {}", result);
+	} 
+
+-  
